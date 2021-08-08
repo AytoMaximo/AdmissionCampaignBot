@@ -118,7 +118,13 @@ namespace AdmissionCampaign
         IiIT_01,
         IiIT_02,
         IiIT_03,
-        IiIT_04
+        IiIT_04,
+        FIT_Web,
+        FIT_SAPR,
+        FIT_POIT,
+        FIT_CyberPhys,
+        FIT_CORPIS,
+        FIT_BigData
     }
 
     public static class BaseData
@@ -137,15 +143,28 @@ namespace AdmissionCampaign
             },
             { Specialty.IiIT_02, "09.03.02_Информационные системы и технологии обработки цифрового контента" },
             { Specialty.IiIT_03, "09.03.02_Информационные системы автоматизированных комплексов медиаиндустрии" },
-            { Specialty.IiIT_04, "09.03.02_Цифровая трансформация" }
+            { Specialty.IiIT_04, "09.03.02_Цифровая трансформация" },
+            { Specialty.FIT_Web, "09.03.01_Веб-технологии"},
+            { Specialty.FIT_SAPR, "09.03.01_Интеграция и программирование в САПР"},
+            { Specialty.FIT_POIT, "09.03.01_Программное обеспечение информационных систем"},
+            { Specialty.FIT_CyberPhys, "09.03.01_Киберфизические системы"},
+            { Specialty.FIT_CORPIS, "09.03.03_Корпоративные информационные системы"},
+            { Specialty.FIT_BigData, "09.03.03_Большие и открытые данные"}
+            
         };
 
         public static readonly Dictionary<Specialty, string> SpecialityTitleShort = new Dictionary<Specialty, string>()
         {
-            { Specialty.IiIT_01, "09.03.02.01" },
-            { Specialty.IiIT_02, "09.03.02.02" },
-            { Specialty.IiIT_03, "09.03.02.03" },
-            { Specialty.IiIT_04, "09.03.02.04" },
+            { Specialty.IiIT_01, "09.03.02.01 (ИСиТ)" },
+            { Specialty.IiIT_02, "09.03.02.02 (ИСиТ ОЦК)" },
+            { Specialty.IiIT_03, "09.03.02.03 (ИСАКМ)" },
+            { Specialty.IiIT_04, "09.03.02.04 (ЦТ)" },
+            { Specialty.FIT_Web, "09.03.01.01 (Веб)"},
+            { Specialty.FIT_SAPR, "09.03.01.02 (САПР)"},
+            { Specialty.FIT_POIT, "09.03.01.03 (ПОИС)"},
+            { Specialty.FIT_CyberPhys, "09.03.01.04 (КФС)"},
+            { Specialty.FIT_CORPIS, "09.03.03.01 (КИС)"},
+            { Specialty.FIT_BigData, "09.03.03.02 (Биг дата)"}
         };
 
         public static void CreateRequestForm(Specialty specialty,
@@ -153,9 +172,16 @@ namespace AdmissionCampaign
         {
             data.AddRange(CommonForm);
             data.Add(new KeyValuePair<string, string>("specCode", SpecialityTitle[specialty]));
-            data.Add(specialty == Specialty.IiIT_02
-                ? new KeyValuePair<string, string>("eduForm", "Заочная")
-                : new KeyValuePair<string, string>("eduForm", "Очная"));
+
+
+            if (specialty == Specialty.IiIT_02 || specialty == Specialty.FIT_POIT)
+            {
+                data.Add(new KeyValuePair<string, string>("eduForm", "Заочная"));
+            }
+            else
+            {
+                data.Add(new KeyValuePair<string, string>("eduForm", "Очная"));
+            }
         }
 
         private static readonly List<KeyValuePair<string, string>> CommonForm = new List<KeyValuePair<string, string>>()
