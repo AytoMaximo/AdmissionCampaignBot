@@ -206,19 +206,22 @@ namespace AdmissionCampaign
 
         public static async Task SaveLastRequest(ParsedDataList data)
         {
+            var path = Path.Combine(Environment.CurrentDirectory, ParsedDataFilename);
             var json = JsonConvert.SerializeObject(data);
-            await File.WriteAllTextAsync(ParsedDataFilename, json);
+            await File.WriteAllTextAsync(path, json);
         }
 
         public static async Task<ParsedDataList> ReadLastRequest()
         {
-            if (!File.Exists(ParsedDataFilename))
+            var path = Path.Combine(Environment.CurrentDirectory, ParsedDataFilename);
+            
+            if (!File.Exists(path))
             {
                 WriteLine("[WARNING] Can't find saved data, abort.");
                 return null;
             }
 
-            var json = await File.ReadAllTextAsync(ParsedDataFilename);
+            var json = await File.ReadAllTextAsync(path);
 
             var data = JsonConvert.DeserializeObject(json, typeof(ParsedDataList));
             if (data == null)
@@ -232,7 +235,8 @@ namespace AdmissionCampaign
 
         public static async Task SaveMessageToFile(string data)
         {
-            await File.WriteAllTextAsync(MessageContentFilename, data);
+            var path = Path.Combine(Environment.CurrentDirectory, MessageContentFilename);
+            await File.WriteAllTextAsync(path, data);
         }
     }
 
