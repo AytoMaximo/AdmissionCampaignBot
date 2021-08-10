@@ -28,7 +28,7 @@ namespace AdmissionCampaign
         private static async Task<string> EntryPoint()
         {
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-
+            
             var data = SpecialityValues.Select(speciality => Task.Run(async() => ParseData(await Request(speciality)))).ToList();
 
             var message = string.Empty;
@@ -53,7 +53,7 @@ namespace AdmissionCampaign
                     }
                 }
 
-                message += "\n";
+                message += $", проходной балл {parsedDataResult.AcceptedScore}\n";
             }
 
             var dataForSave = new ParsedDataList(data);
@@ -75,7 +75,28 @@ namespace AdmissionCampaign
             var current = int.Parse(Regex.Replace(lines[1], DigitOnlyPattern, ""));
             var max = int.Parse(Regex.Replace(lines[7], DigitOnlyPattern, ""));
 
-            return new ParsedData(specialty, current, max);
+            var ratingTable = doc.GetElementbyId("div4").ChildNodes[1];
+
+            var hasAgreementCount = 0;
+            var finalScore = 0;
+            foreach (var row in ratingTable.SelectNodes("tr"))
+            {
+                var cells = row.SelectNodes("td");
+                
+                var agreementCheck = cells[16].InnerText.Contains("да ");
+                if (agreementCheck)
+                {
+                    hasAgreementCount++;
+                }
+
+                if (hasAgreementCount == max)
+                {
+                    finalScore = int.Parse(Regex.Replace(cells[14].InnerText, DigitOnlyPattern, ""));
+                    break;
+                }
+            }
+            
+            return new ParsedData(specialty, current, max, finalScore);
         }
 
         private static async Task<(Specialty, string)> Request(Specialty specialty)
@@ -221,12 +242,14 @@ namespace AdmissionCampaign
             public Specialty Specialty { get; set; }
             public int MaxCount { get; set; }
             public int CurrentCount { get; set; }
+            public int AcceptedScore { get; set; }
 
-            public ParsedData(Specialty spec, int current, int max)
+            public ParsedData(Specialty spec, int current, int max, int score)
             {
                 Specialty = spec;
                 MaxCount = max;
                 CurrentCount = current;
+                AcceptedScore = score;
             }
         }
 
