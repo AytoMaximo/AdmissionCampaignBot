@@ -33,34 +33,10 @@ namespace AdmissionCampaign
 
             var message = string.Empty;
             var lastReport = await ReadLastRequest();
-            foreach (var parsedDataResult in data.Select(parsedData => parsedData.Result))
-            {
-                message +=
-                    $"{SpecialityTitleShort[parsedDataResult.Specialty]}: {parsedDataResult.CurrentCount} согласий на {parsedDataResult.MaxCount} бюджетных мест";
-
-                var lastSpecialityMetrics =
-                    lastReport?.Data.SingleOrDefault(d => d.Specialty == parsedDataResult.Specialty);
-
-                if (lastSpecialityMetrics != null)
-                {
-                    if (lastSpecialityMetrics.CurrentCount < parsedDataResult.CurrentCount)
-                    {
-                        message += $" (+{parsedDataResult.CurrentCount - lastSpecialityMetrics.CurrentCount})";
-                    }
-                    else if (lastSpecialityMetrics.CurrentCount > parsedDataResult.CurrentCount)
-                    {
-                        message += $" (-{lastSpecialityMetrics.CurrentCount - parsedDataResult.CurrentCount})";
-                    }
-                }
-
-                message += $", проходной балл {parsedDataResult.AcceptedScore}\n";
-            }
 
             var dataForSave = new ParsedDataList(data);
-            
             SaveLastRequest(dataForSave);
-
-            return message;
+            return AsciiTableGenerator.CreateAsciiTableFromDataTable(data, lastReport).ToString();
         }
 
         private static ParsedData ParseData((Specialty specialty, string html) input)
