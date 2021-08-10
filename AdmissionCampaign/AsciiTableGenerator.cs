@@ -72,11 +72,11 @@ namespace AdmissionCampaign
                  {
                      if (lastSpecialityMetrics.CurrentCount < record.CurrentCount)
                      {
-                         myDataRow["Динамика"]= $" (+{record.CurrentCount - lastSpecialityMetrics.CurrentCount})";
+                         myDataRow["Динамика"]= $" +{record.CurrentCount - lastSpecialityMetrics.CurrentCount}";
                      }
                      else if (lastSpecialityMetrics.CurrentCount > record.CurrentCount)
                      {
-                         myDataRow["Динамика"]= $" (-{lastSpecialityMetrics.CurrentCount - record.CurrentCount})";
+                         myDataRow["Динамика"]= $" -{lastSpecialityMetrics.CurrentCount - record.CurrentCount}";
                      }
                  }
 
