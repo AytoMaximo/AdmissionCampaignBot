@@ -49,7 +49,7 @@ namespace AdmissionCampaign
             var lines = ul.SelectNodes("//li").Select(node => node.InnerText).ToList();
 
             var current = int.Parse(Regex.Replace(lines[1], DigitOnlyPattern, ""));
-            var max = int.Parse(Regex.Replace(lines[7], DigitOnlyPattern, ""));
+            var max = int.Parse(Regex.Replace(lines[6], DigitOnlyPattern, ""));
 
             var ratingTable = doc.GetElementbyId("div4").ChildNodes[1];
 
@@ -58,7 +58,7 @@ namespace AdmissionCampaign
             foreach (var row in ratingTable.SelectNodes("tr"))
             {
                 var cells = row.SelectNodes("td");
-                
+
                 var agreementCheck = cells[16].InnerText.Contains("да ");
                 if (agreementCheck)
                 {
@@ -71,7 +71,7 @@ namespace AdmissionCampaign
                     break;
                 }
             }
-            
+
             return new ParsedData(specialty, current, max, finalScore);
         }
 
@@ -121,7 +121,8 @@ namespace AdmissionCampaign
         FIT_POIT,
         FIT_CyberPhys,
         FIT_CORPIS,
-        FIT_BigData
+        FIT_BigData,
+        FIT_BizIT
     }
 
     public static class BaseData
@@ -136,32 +137,34 @@ namespace AdmissionCampaign
         {
             {
                 Specialty.IiIT_01,
-                "09.03.02_Информационные системы и технологии (Информационные системы и технологии обработки цифрового контента; Информационные и автоматизированные системы обр"
+                "09.03.02_АС обработки информации и управления; ИТ в медиаиндустрии и дизайне; Технологии доп и VR; ПО игровой компьютерной индустрии; ИС умных пространств"
             },
-            { Specialty.IiIT_02, "09.03.02_Информационные системы и технологии обработки цифрового контента" },
+            { Specialty.IiIT_02, "09.03.02_Цифровая трансформация" },
             { Specialty.IiIT_03, "09.03.02_Информационные системы автоматизированных комплексов медиаиндустрии" },
-            { Specialty.IiIT_04, "09.03.02_Цифровая трансформация" },
+            { Specialty.IiIT_04,  "09.03.02_Информационные системы и технологии обработки цифрового контента"},
             { Specialty.FIT_Web, "09.03.01_Веб-технологии"},
             { Specialty.FIT_SAPR, "09.03.01_Интеграция и программирование в САПР"},
             { Specialty.FIT_POIT, "09.03.01_Программное обеспечение информационных систем"},
             { Specialty.FIT_CyberPhys, "09.03.01_Киберфизические системы"},
             { Specialty.FIT_CORPIS, "09.03.03_Корпоративные информационные системы"},
-            { Specialty.FIT_BigData, "09.03.03_Большие и открытые данные"}
+            { Specialty.FIT_BigData, "09.03.03_Большие и открытые данные"},
+            { Specialty.FIT_BizIT, "09.03.03_Информационные технологии управления бизнесом"}
             
         };
 
         public static readonly Dictionary<Specialty, string> SpecialityTitleShort = new Dictionary<Specialty, string>()
         {
             { Specialty.IiIT_01, "09.03.02.01 (ИСиТ)" },
-            { Specialty.IiIT_02, "09.03.02.02 (ИСиТ ОЦК)" },
+            { Specialty.IiIT_02, "09.03.02.02 (ЦТ)" },
             { Specialty.IiIT_03, "09.03.02.03 (ИСАКМ)" },
-            { Specialty.IiIT_04, "09.03.02.04 (ЦТ)" },
+            { Specialty.IiIT_04,  "09.03.02.04 (ИСиТ ОЦК)"},
             { Specialty.FIT_Web, "09.03.01.01 (Веб)"},
             { Specialty.FIT_SAPR, "09.03.01.02 (САПР)"},
             { Specialty.FIT_POIT, "09.03.01.03 (ПОИС)"},
             { Specialty.FIT_CyberPhys, "09.03.01.04 (КФС)"},
             { Specialty.FIT_CORPIS, "09.03.03.01 (КИС)"},
-            { Specialty.FIT_BigData, "09.03.03.02 (Биг дата)"}
+            { Specialty.FIT_BigData, "09.03.03.02 (Биг дата)"},
+            { Specialty.FIT_BizIT, "09.03.03 (ИТ УБ)"}
         };
 
         public static void CreateRequestForm(Specialty specialty,
@@ -171,7 +174,7 @@ namespace AdmissionCampaign
             data.Add(new KeyValuePair<string, string>("specCode", SpecialityTitle[specialty]));
 
 
-            if (specialty == Specialty.IiIT_02 || specialty == Specialty.FIT_POIT)
+            if (specialty == Specialty.IiIT_04 || specialty == Specialty.FIT_POIT)
             {
                 data.Add(new KeyValuePair<string, string>("eduForm", "Заочная"));
             }
@@ -183,7 +186,7 @@ namespace AdmissionCampaign
 
         private static readonly List<KeyValuePair<string, string>> CommonForm = new List<KeyValuePair<string, string>>()
         {
-            new KeyValuePair<string, string>("select1", "000000017_01"),
+            new KeyValuePair<string, string>("select1", "000000031_01"),
             new KeyValuePair<string, string>("eduFin", "Бюджетная основа")
         };
     }
